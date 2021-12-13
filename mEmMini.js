@@ -255,8 +255,8 @@ class MemMiniUtilities {
 				let dae           = drawAction.getDrawAreaElement(ListenerResources.mEmMiniNumber);
 				let top           = dae.getBoundingClientRect().top + window.scrollY;
 				let left          = dae.getBoundingClientRect().left + window.scrollX;
-				canvas.style.top  = dae.offsetTop + 'px';
-				canvas.style.left = dae.offsetLeft + 'px';
+				canvas.style.top  = top + 'px'; //dae.offsetTop + 'px';
+				canvas.style.left = left + 'px'; //dae.offsetLeft + 'px';
 				
 				let options = document.querySelector('#mEmMiniDrawViewPinnedButtonContainer_' + ListenerResources.mEmMiniNumber);
 				if (options) {
@@ -971,7 +971,7 @@ class MemMiniUserInterface {
         outerDiv.id                    = "mEmMiniModalWindowContainer";
         outerDiv.style.display         = "block";
         outerDiv.style.position        = "fixed";
-        outerDiv.style.zIndex          = 999998;
+        outerDiv.style.zIndex          = 999999;
         outerDiv.style.paddingTop      = "100px";
         outerDiv.style.left            = 0;
         outerDiv.style.top             = 0;
@@ -1077,13 +1077,12 @@ class MemMiniUserInterface {
 		let div = document.querySelector('#mEmMiniButtonContainer_' + ListenerResources.mEmMiniNumber);
 		if (!div) {
 			let daeRect            	  = dae.getBoundingClientRect();
-			console.log(dae.offsetHeight);
 			div                	      = document.createElement('div');
 			div.id                 	  = 'mEmMiniButtonContainer_' + ListenerResources.mEmMiniNumber;
 			div.style.position     	  = 'absolute';
 			div.style.margin       	  = '10px';
 			div.style.zIndex       	  = 2;
-			div.style.top             = (dae.offsetTop + dae.offsetHeight) + 'px'; 
+			div.style.top             = (daeRect.top + window.scrollY + dae.offsetHeight) + 'px';
 			div.style.padding         = '0 5px';
 			div.style.backgroundColor = 'rgba(255,255,255, 0.8)';
 			div.style.borderRadius    = '5px';
@@ -1781,15 +1780,16 @@ class DrawAction extends CanvasListeners {
 	
 	adjustSpeechBubbleTri(triangle, div) {
 		let divPosition     = div.getBoundingClientRect();
-		triangle.style.top  = (div.offsetTop - 14) + 'px';
+		triangle.style.top  = (divPosition.top + window.scrollY - 14) + 'px'; //(div.offsetTop - 14) + 'px';
 		triangle.style.left = (div.offsetLeft + div.offsetWidth/2) + 'px';
 	}
 	
 	wrapCanvasAroundDrawAreaElement(dae, isDraw) {
+	    let rect              = dae.getBoundingClientRect();
 		let width             = dae.offsetWidth;
 		let height            = dae.offsetHeight;
-		let top               = dae.offsetTop; 
-		let left              = dae.offsetLeft; 
+		let top               = rect.top + window.scrollY; //dae.top; //dae.offsetTop; 
+		let left              = rect.left + window.scrollX; //dae.left; //dae.offsetLeft; 
 		let canvas            = document.createElement('canvas');
 		canvas.id             = 'mEmMini_' + ListenerResources.mEmMiniNumber;
 		canvas.style.position = 'absolute';
@@ -2085,4 +2085,3 @@ class MessageManager {
 		}, { once: true });
 	}
 }
-
